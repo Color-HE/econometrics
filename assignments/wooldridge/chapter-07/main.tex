@@ -1,0 +1,803 @@
+\documentclass[UTF8,a4paper,11pt,fontset=fandol]{ctexart}
+\usepackage[margin=2.2cm,headheight=15pt]{geometry}
+\usepackage{amsmath,amssymb,booktabs,array,enumitem,fancyhdr,needspace}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{3pt}
+\linespread{1.15}
+\allowdisplaybreaks[2]
+\setlength{\emergencystretch}{2em}
+\ctexset{section={format=\large\bfseries,beforeskip=16pt,afterskip=8pt}}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small 伍德里奇《计量经济学导论》第七章}
+\fancyhead[R]{\small 习题解答}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\newcommand{\vr}[1]{\mathit{#1}}
+\newcommand{\E}{\operatorname{E}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\se}{\operatorname{se}}
+\newcommand{\subq}[1]{\par\medskip\noindent\textbf{（#1）}\enspace}
+\newcommand{\question}[2]{\def\currentquestiontitle{第 #1 题\quad #2}}
+\newcommand{\coef}[2]{\underset{\scriptstyle(#2)}{#1}}
+\newenvironment{originalquestion}{%
+  \par\medskip\noindent\begin{minipage}{\linewidth}
+  \section*{\currentquestiontitle}
+  \par\smallskip\noindent\textbf{原题}\par\smallskip
+  \begingroup\small\setlength{\parskip}{2.5pt}%
+}{%
+  \par\endgroup\end{minipage}\par\medskip\Needspace{6\baselineskip}
+  \noindent\rule{\linewidth}{0.35pt}\par\smallskip
+  \noindent\textbf{解答}\par
+}
+\begin{document}
+\begin{center}
+{\LARGE\bfseries 第七章习题解答}\\[5pt]
+{\small 原题与解答}
+\end{center}
+\vspace{3pt}
+\noindent\textbf{记号：}所有对数均为自然对数；$SSR$ 表示残差平方和。对数模型中，变化 $\Delta$ 对应的百分比变化近似为 $100\Delta\%$，按对数预测值换算则为 $100(e^\Delta-1)\%$。以下检验使用题目报告的通常 OLS 标准误。
+
+\question{1}{睡眠、工作时间与性别}
+\begin{originalquestion}
+利用 SLEEP75 中的数据（也可参见第 3 章习题 3），我们得到如下估计方程：
+\[
+\begin{aligned}
+\widehat{\vr{sleep}}={}&\coef{3840.83}{235.11}
+-\coef{0.163}{0.018}\vr{totwrk}
+-\coef{11.71}{5.86}\vr{educ}\\
+&-\coef{8.70}{11.21}\vr{age}
++\coef{0.128}{0.134}\vr{age}^2
++\coef{87.75}{34.33}\vr{male}.
+\end{aligned}
+\]
+\[
+n=706,\qquad R^2=0.123,\qquad \bar R^2=0.117.
+\]
+式中，$\vr{sleep}$ 是每周晚上睡眠的总分钟数；$\vr{totwrk}$ 是每周花在工作上的总分钟数；$\vr{educ}$ 和 $\vr{age}$ 则以年为单位；而 $\vr{male}$ 是一个性别虚拟变量。
+
+\subq{i}所有其他因素不变，有没有男性比女性睡眠更多的证据？这个证据有多强？
+
+\subq{ii}工作与睡眠之间有统计显著的负相关关系吗？所估计的相关关系是什么样的？
+
+\subq{iii}为了检验年龄在其他因素不变的情况下对睡眠没有影响这个原假设，你还需要另外做什么回归？
+\end{originalquestion}
+
+原估计式为
+\[
+\begin{aligned}
+\widehat{\vr{sleep}}={}&3840.83-0.163\vr{totwrk}-11.71\vr{educ}\\
+&-8.70\vr{age}+0.128\vr{age}^2+87.75\vr{male},
+\end{aligned}
+\qquad n=706.
+\]
+\subq{i}控制工作时间、教育和年龄后，男性每周预测睡眠时间比女性多
+\[
+87.75\text{ 分钟}\approx1.46\text{ 小时}.
+\]
+检验 $H_0:\beta_{\vr{male}}=0$ 对 $H_1:\beta_{\vr{male}}>0$，得到
+\[
+t=\frac{87.75}{34.33}=2.56,\qquad df=706-6=700.
+\]
+单侧 $p$ 值约为 $0.0054$，故在 $1\%$ 的单侧显著性水平上拒绝原假设。若采用双侧检验，$p$ 值约为 $0.011$，在 $5\%$ 水平上显著。
+
+\subq{ii}工作时间系数为负，且
+\[
+t_{\vr{totwrk}}=\frac{-0.163}{0.018}=-9.06.
+\]
+因此，控制其余变量后，工作与睡眠存在很显著的负向关系。每周多工作 $1$ 小时，预测睡眠时间减少
+\[
+0.163\times60=9.78\text{ 分钟}.
+\]
+
+\subq{iii}年龄以一次项和平方项同时进入模型，故应联合检验
+\[
+H_0:\beta_{\vr{age}}=\beta_{\vr{age}^2}=0.
+\]
+在相同的 $706$ 个观测上删去这两项重新估计，取得受限模型的 $R_R^2$，即可计算
+\[
+F=\frac{(R_{UR}^2-R_R^2)/2}{(1-R_{UR}^2)/(706-6)}
+ =\frac{(0.123-R_R^2)/2}{0.877/700}.
+\]
+在原假设下，通常的同方差 $F$ 检验参照 $F_{2,700}$ 分布。题目尚未给出 $R_R^2$；仅有两个系数各自的标准误，不能完成该联合检验。
+
+\question{2}{出生体重与父母特征}
+\begin{originalquestion}
+利用 BWGHT 中的数据，可估计出如下方程：
+\[
+\begin{aligned}
+\widehat{\log(\vr{bwght})}={}&\coef{4.66}{0.22}
+-\coef{0.0044}{0.0009}\vr{cigs}
++\coef{0.0093}{0.0059}\log(\vr{faminc})\\
+&+\coef{0.016}{0.006}\vr{parity}
++\coef{0.027}{0.010}\vr{male}
++\coef{0.055}{0.013}\vr{white},
+\end{aligned}
+\]
+\[
+n=1388,\qquad R^2=0.0472
+\]
+和
+\[
+\begin{aligned}
+\widehat{\log(\vr{bwght})}={}&\coef{4.65}{0.38}
+-\coef{0.0052}{0.0010}\vr{cigs}
++\coef{0.0110}{0.0085}\log(\vr{faminc})
++\coef{0.017}{0.006}\vr{parity}\\
+&+\coef{0.034}{0.011}\vr{male}
++\coef{0.045}{0.015}\vr{white}
+-\coef{0.0030}{0.0030}\vr{motheduc}
++\coef{0.0032}{0.0026}\vr{fatheduc},
+\end{aligned}
+\]
+\[
+n=1191,\qquad R^2=0.0493.
+\]
+变量定义和例 4.9 中一样，但我们增加了两个虚拟变量：一个虚拟变量表明孩子是不是男孩，另一个虚拟变量表明这个孩子是不是白人。
+
+\subq{i}在第一个方程中，解释变量 $\vr{cigs}$ 的系数。具体而言，每天多抽 10 根烟对出生体重有何影响？
+
+\subq{ii}在第一个方程中，保持其他因素不变，预计一个白人孩子的出生体重比一个非白人孩子重多少？这个差异是统计显著的吗？
+
+\subq{iii}评价 $\vr{motheduc}$ 的估计影响和统计显著性。
+
+\subq{iv}从这些给定信息中，为什么不能计算出检验 $\vr{motheduc}$ 和 $\vr{fatheduc}$ 联合显著性的 $F$ 统计量？为了计算这个统计量，还需要做些什么？
+\end{originalquestion}
+
+\subq{i}第一个方程中，$\vr{cigs}$ 的系数为 $-0.0044$。每天多抽 $10$ 根烟，对应
+\[
+\Delta\widehat{\log(\vr{bwght})}=-0.0044\times10=-0.044.
+\]
+因此，预测出生体重约降低 $4.4\%$；按对数预测值换算，降幅为
+\[
+100(1-e^{-0.044})\%\approx4.30\%.
+\]
+
+\subq{ii}白人虚拟变量的系数为 $0.055$。其他因素相同，白人婴儿的预测出生体重约比非白人婴儿高 $5.5\%$，换算值为
+\[
+100(e^{0.055}-1)\%\approx5.65\%.
+\]
+检验 $H_0:\beta_{\vr{white}}=0$：
+\[
+t=\frac{0.055}{0.013}=4.23.
+\]
+该差异在 $1\%$ 水平上显著。
+
+\subq{iii}第二个方程中，$\vr{motheduc}$ 的系数为 $-0.003$。控制其他变量后，母亲多受一年教育，预测出生体重约下降 $0.3\%$。但
+\[
+t=\frac{-0.003}{0.0030}=-1.00,
+\]
+在通常显著性水平上不能拒绝系数为零，因而不能认定这一负向关系具有统计显著性。
+
+\subq{iv}要检验
+\[
+H_0:\beta_{\vr{motheduc}}=\beta_{\vr{fatheduc}}=0,
+\]
+受限模型和非受限模型必须基于同一批观测。题中两式的样本量分别为 $1388$ 和 $1191$，因变量的总平方和也可能不同，不能直接把两个 $R^2$ 代入 $F$ 公式。
+
+应使用第二式的 $1191$ 个完整观测，重新估计不含父母教育变量的受限模型。第二式有 $7$ 个斜率和 $1$ 个截距，因此
+\[
+F=\frac{(0.0493-R_R^2)/2}{(1-0.0493)/(1191-8)}
+ =\frac{(0.0493-R_R^2)/2}{0.9507/1183}.
+\]
+还需要的量就是同一样本上受限模型的 $R_R^2$ 或 $SSR_R$；检验自由度为 $(2,1183)$。
+
+\question{3}{SAT 成绩、学校规模与种族性别交互项}
+\begin{originalquestion}
+利用 GPA2 中的数据，可估计出如下方程：
+\[
+\begin{aligned}
+\widehat{\vr{sat}}={}&\coef{1028.10}{6.29}
++\coef{19.30}{3.83}\vr{hsize}
+-\coef{2.19}{0.53}\vr{hsize}^2\\
+&-\coef{45.09}{4.29}\vr{female}
+-\coef{169.81}{12.71}\vr{black}
++\coef{62.31}{18.15}\vr{female}\cdot\vr{black},
+\end{aligned}
+\]
+\[
+n=4137,\qquad R^2=0.0858.
+\]
+式中，$\vr{sat}$ 是 SAT 的综合分数；$\vr{hsize}$ 是以百人计算学生所在高中毕业班级的学生规模；$\vr{female}$ 是一个性别虚拟变量；而 $\vr{black}$ 是一个种族虚拟变量（黑人取值 1，其他人都取值 0）。
+
+\subq{i}有很强的证据支持模型中应该包括 $\vr{hsize}^2$ 吗？从这个方程来看，最优的高中规模是什么？
+
+\subq{ii}保持 $\vr{hsize}$ 不变，非黑人女性和非黑人男性之间 SAT 分数的估计差异是多少？这个估计差异的统计显著性如何？
+
+\subq{iii}非黑人男性和黑人男性之间 SAT 分数的估计差异是多少？检验其分数没有差异的原假设，备择假设是他们的分数存在差异。
+
+\subq{iv}黑人女性和非黑人女性之间 SAT 分数的估计差异是多少？为了检验这个差异的统计显著性，你需要怎么做？
+\end{originalquestion}
+
+原估计式为
+\[
+\begin{aligned}
+\widehat{\vr{sat}}={}&1028.10+19.30\vr{hsize}-2.19\vr{hsize}^2\\
+&-45.09\vr{female}-169.81\vr{black}
++62.31\vr{female}\cdot\vr{black}.
+\end{aligned}
+\]
+\subq{i}平方项的检验统计量为
+\[
+t=\frac{-2.19}{0.53}=-4.13.
+\]
+它在 $1\%$ 水平上显著，应保留 $\vr{hsize}^2$。由于二次项系数为负，预测 SAT 分数在
+\[
+19.30-2(2.19)\vr{hsize}=0
+\]
+处达到最大值，即
+\[
+\vr{hsize}^{*}=\frac{19.30}{4.38}\approx4.406.
+\]
+$\vr{hsize}$ 以百人为单位，所以估计式对应的最优毕业班规模约为 $\boxed{441\text{ 人}}$。
+
+\subq{ii}非黑人群体有 $\vr{black}=0$，女性相对男性的预测差异为
+\[
+\widehat{\vr{sat}}_{\text{非黑人女性}}
+-\widehat{\vr{sat}}_{\text{非黑人男性}}=-45.09.
+\]
+其 $t$ 值为 $-45.09/4.29=-10.51$，差异在 $1\%$ 水平上显著。
+
+\subq{iii}男性有 $\vr{female}=0$。黑人男性相对非黑人男性的预测差异为 $-169.81$ 分。对双侧假设
+\[
+H_0:\beta_{\vr{black}}=0,\qquad H_1:\beta_{\vr{black}}\ne0,
+\]
+统计量为
+\[
+t=\frac{-169.81}{12.71}=-13.36.
+\]
+故在 $1\%$ 水平上拒绝无差异的原假设。
+
+\subq{iv}女性有 $\vr{female}=1$，所以黑人女性相对非黑人女性的预测差异为
+\[
+-169.81+62.31=\boxed{-107.50\text{ 分}}.
+\]
+应检验 $H_0:\beta_{\vr{black}}+\beta_{\vr{female}\cdot\vr{black}}=0$。系数和的标准误为
+\[
+\sqrt{12.71^2+18.15^2+
+2\widehat{\Cov}\!\left(
+\widehat\beta_{\vr{black}},
+\widehat\beta_{\vr{female}\cdot\vr{black}}\right)}.
+\]
+因此，需要取得这两个估计量的协方差。也可令 $\vr{male}=1-\vr{female}$，改用 $\vr{male}$、$\vr{black}$、$\vr{male}\cdot\vr{black}$ 回归；此时 $\vr{black}$ 的系数就是上述差异，其通常 $t$ 检验即可回答问题。
+
+\question{4}{CEO 工资与行业差异}
+\begin{originalquestion}
+一个解释 CEO 工资的等式如下：
+\[
+\begin{aligned}
+\widehat{\log(\vr{salary})}={}&\coef{4.59}{0.30}
++\coef{0.257}{0.032}\log(\vr{sales})
++\coef{0.011}{0.004}\vr{roe}
++\coef{0.158}{0.089}\vr{finance}\\
+&+\coef{0.181}{0.085}\vr{consprod}
+-\coef{0.283}{0.099}\vr{utility},
+\end{aligned}
+\]
+\[
+n=209,\qquad R^2=0.357.
+\]
+所使用的数据是 CEOSAL1。其中 $\vr{finance}$、$\vr{consprod}$ 和 $\vr{utility}$ 是二值变量，代表行业为金融、消费品和公用事业。略去的行业是运输业。
+
+\subq{i}当 $\vr{sales}$ 和 $\vr{roe}$ 确定时，计算公用事业和运输业的估计的工资百分比近似差异。这一差异在 $1\%$ 的显著性水平上统计显著吗？
+
+\subq{ii}使用等式（7.10）获得确定的公用事业和运输业的估计的工资百分比差异，将结果与第（i）部分中得到的结果比较。
+
+\subq{iii}消费品行业和金融业之间估计的工资百分比差异近似是多少？写下能够让你检验差异是否统计显著的等式。
+\end{originalquestion}
+
+\subq{i}运输业是基准组。销售额和 $\vr{roe}$ 相同时，公用事业的对数工资比运输业低 $0.283$，即预测工资近似低 $28.3\%$。检验统计量为
+\[
+t=\frac{-0.283}{0.099}=-2.86,\qquad df=209-6=203.
+\]
+由于 $|t|>t_{0.995,203}\approx2.60$，该差异在 $1\%$ 双侧水平上显著。
+
+\subq{ii}按等式（7.10）换算，
+\[
+100(e^{-0.283}-1)\%\approx\boxed{-24.65\%}.
+\]
+所以公用事业 CEO 的预测工资约比运输业低 $24.65\%$；线性近似将降幅高估约 $3.65$ 个百分点。
+
+\subq{iii}消费品行业相对金融业的对数工资差异为
+\[
+0.181-0.158=0.023,
+\]
+即工资近似高 $2.3\%$，换算值约为 $2.33\%$。
+
+设 $D_T$ 表示运输业，将金融业改为基准组，估计
+\[
+\log(\vr{salary})=\alpha_0+\alpha_1\log(\vr{sales})+\alpha_2\vr{roe}
++\delta_C\vr{consprod}+\delta_U\vr{utility}+\delta_TD_T+u.
+\]
+检验 $H_0:\delta_C=0$ 即可。等价地，可在原模型中检验
+$H_0:\beta_{\vr{consprod}}-\beta_{\vr{finance}}=0$，但须取得相应系数差的标准误。
+
+\question{5}{以无电脑虚拟变量替换有电脑虚拟变量}
+\begin{originalquestion}
+在例7.2中，令 $\vr{noPC}$ 表示一个虚拟变量：没有一台个人计算机的学生取值1，否则取值0。
+
+\subq{i}如果用 $\vr{noPC}$ 取代方程（7.6）中的 $\vr{PC}$，所估计方程的截距会怎么样？$\vr{noPC}$ 的系数是多少？（提示：写出 $\vr{PC}=1-\vr{noPC}$，并代入方程 $\widehat{\vr{colGPA}}=\widehat\beta_0+\widehat\delta_0\vr{PC}+\widehat\beta_1\vr{hsGPA}+\widehat\beta_2\vr{ACT}$。）
+
+\subq{ii}如果用 $\vr{noPC}$ 取代 $\vr{PC}$，$R^2$ 会有什么变化？
+
+\subq{iii}$\vr{PC}$ 和 $\vr{noPC}$ 应该都作为自变量包括进模型中吗？请解释。
+\end{originalquestion}
+
+\subq{i}由于 $\vr{PC}=1-\vr{noPC}$，
+\[
+\begin{aligned}
+\vr{colGPA}
+&=\beta_0+\delta_0\vr{PC}+\beta_1\vr{hsGPA}+\beta_2\vr{ACT}+u\\
+&=(\beta_0+\delta_0)-\delta_0\vr{noPC}
++\beta_1\vr{hsGPA}+\beta_2\vr{ACT}+u.
+\end{aligned}
+\]
+因此，新截距为 $\widehat\beta_0+\widehat\delta_0$，$\vr{noPC}$ 的系数为 $-\widehat\delta_0$，其余系数不变。按教材式（7.6）的舍入值 $1.26$ 和 $0.157$，新截距约为 $1.42$，$\vr{noPC}$ 系数为 $-0.157$。
+
+\subq{ii}两种设定的拟合值和残差完全相同，故 $R^2$ 不变。
+
+\subq{iii}在含截距的模型中不能同时纳入 $\vr{PC}$ 和 $\vr{noPC}$，因为
+\[
+\vr{PC}+\vr{noPC}=1,
+\]
+存在完全多重共线性。
+
+\question{6}{培训效应与能力的遗漏变量偏误}
+\begin{originalquestion}
+为了检验工作培训项目对工人以后工资的有效性，我们设定了模型
+\[
+\log(\vr{wage})=\beta_0+\beta_1\vr{train}+\beta_2\vr{educ}+\beta_3\vr{exper}+u
+\]
+其中，$\vr{train}$ 表示的虚拟变量，在工人参与这个项目时取值1，想象误差项包括了无法观测的工人能力。如果能力越低的工人被派遣来参加这个项目的机会越大，而且我们使用OLS分析，你认为 $\beta_1$ 的OLS估计量可能有什么偏误？（提示：参见第3章。）
+\end{originalquestion}
+
+设真实工资方程还包含未观测能力 $a$：
+\[
+\log(\vr{wage})=\beta_0+\beta_1\vr{train}
++\beta_2\vr{educ}+\beta_3\vr{exper}+\gamma a+\varepsilon,
+\qquad \gamma>0.
+\]
+假定真实方程中的其余误差满足 $\E(\varepsilon\mid\vr{train},\vr{educ},\vr{exper},a)=0$。
+令 $\widetilde{\vr{train}}$ 为 $\vr{train}$ 对截距、$\vr{educ}$、$\vr{exper}$ 回归后的残差。由部分回归原理，
+\[
+\operatorname{plim}\widehat\beta_1-\beta_1
+=\gamma\,\frac{\Cov(\widetilde{\vr{train}},a)}
+{\Var(\widetilde{\vr{train}})}.
+\]
+如果控制教育和经验后，低能力工人仍更容易参加培训，则
+$\Cov(\widetilde{\vr{train}},a)<0$，从而
+\[
+\boxed{\operatorname{plim}\widehat\beta_1<\beta_1}.
+\]
+OLS 会低估培训的工资回报，甚至可能将正回报估成负值。偏误方向取决于控制教育、经验后的能力与培训之间的关系；题设所描述的负向选择对应向下偏误。
+
+\question{7}{将劳动参与改为不参与}
+\begin{originalquestion}
+在方程（7.29）的例子中，假设我们定义 $\vr{outlf}$ 在妇女不属于劳动力范围时等于1，否则等于0。
+
+\subq{i}如果我们将 $\vr{outlf}$ 对方程（7.29）中的所有自变量做回归，截距和斜率的估计值会怎么样？（提示：$\vr{inlf}=1-\vr{outlf}$。将它代入总体方程 $\vr{inlf}=\beta_0+\beta_1\vr{nwifeinc}+\beta_2\vr{educ}+\cdots$，并重新整理。）
+
+\subq{ii}截距和斜率的标准误会有什么变化？
+
+\subq{iii}$R^2$ 会有什么变化？
+\end{originalquestion}
+
+记方程（7.29）为
+\[
+\vr{inlf}=\beta_0+\beta_1x_1+\cdots+\beta_kx_k+u.
+\]
+由于 $\vr{outlf}=1-\vr{inlf}$，有
+\[
+\vr{outlf}=(1-\beta_0)-\beta_1x_1-\cdots-\beta_kx_k-u.
+\]
+\subq{i}新截距为 $1-\widehat\beta_0$，所有斜率变号。按教材报告的舍入值，
+\[
+\begin{aligned}
+\widehat{\vr{outlf}}={}&0.414+0.0034\vr{nwifeinc}-0.038\vr{educ}\\
+&-0.039\vr{exper}+0.00060\vr{exper}^2+0.016\vr{age}\\
+&+0.262\vr{kidslt6}-0.013\vr{kidsge6}.
+\end{aligned}
+\]
+这里截距由 $1-0.586=0.414$ 得到。
+
+\subq{ii}截距和所有斜率的标准误均不变。新残差为原残差的相反数，故 $SSR$ 和误差方差估计不变；同时 $X$ 未改变，所以系数方差矩阵不变。
+
+\subq{iii}因变量的新离均差为原离均差的相反数，
+\[
+(1-y_i)-(1-\bar y)=-(y_i-\bar y),
+\]
+故总平方和也不变。因此 $R^2=1-SSR/SST$ 不变，仍约为 $0.264$。
+
+\question{8}{抽烟与工资：连续变量、分组与交互项}
+\begin{originalquestion}
+假设你通过对工资、受教育程度、工作经历和性别的调查来搜集数据。而且，你还询问了抽烟方面的信息。原问题是：“上个月你抽过几包烟？”
+
+\subq{i}写出一个方程，使之在控制其他因素的情况下，能让你估计出抽烟对工资的影响。你应该能得出这样的结论：“每个月多抽5包烟，估计会使工资改变 $x\%$。”
+
+\subq{ii}写出一个模型，使你能检验女性和男性在抽烟对工资影响上是否存在差异。你将怎样检验男女抽烟的影响是否有差异的？
+
+\subq{iii}假设你认为最好按抽烟量将人们分为四类：不抽者、浅尝者（每月1--5包）、适度者（每月6--10包）和重抽者（每个月10包以上）。写出一个模型，使你能估计出抽烟对工资的影响。
+
+\subq{iv}利用第（iii）部分的模型，详细解释如何检验抽烟对工资没有影响的原假设。既要具体，又要包括约束的自由度的一个详细列表。
+
+\subq{v}利用你搜集的调查数据做因果推断，会有哪些潜在的问题？
+\end{originalquestion}
+
+令 $s$ 为每月抽烟包数，$f=1$ 表示女性，$f=0$ 表示男性。
+
+\subq{i}可设定
+\[
+\log(\vr{wage})=\beta_0+\beta_1\vr{educ}
++\beta_2\vr{exper}+\beta_3\vr{exper}^2+\beta_4 f+\gamma s+u.
+\]
+控制教育、经验和性别后，每月多抽 $5$ 包烟，对数工资变化为 $5\gamma$，故工资近似变化 $500\gamma\%$。估计后即可报告 $x=500\widehat\gamma$；按对数预测值换算则为 $100(e^{5\widehat\gamma}-1)\%$。
+
+\subq{ii}加入性别与抽烟量的交互项：
+\[
+\log(\vr{wage})=\beta_0+\beta_1\vr{educ}
++\beta_2\vr{exper}+\beta_3\vr{exper}^2+\beta_4 f
++\gamma s+\delta(f s)+u.
+\]
+男性每月多抽一包的对数工资变化为 $\gamma$，女性为 $\gamma+\delta$。因此，检验
+\[
+H_0:\delta=0\qquad\text{对}\qquad H_1:\delta\ne0,
+\quad
+t=\frac{\widehat\delta}{\se(\widehat\delta)}
+\]
+即可检验抽烟影响是否存在性别差异。
+
+\subq{iii}定义轻度、适度和重度抽烟虚拟变量
+\[
+D_L=\mathbf1(1\le s\le5),\quad
+D_M=\mathbf1(6\le s\le10),\quad
+D_H=\mathbf1(s>10).
+\]
+以不抽烟者为基准，估计
+\[
+\log(\vr{wage})=\beta_0+\beta_1\vr{educ}
++\beta_2\vr{exper}+\beta_3\vr{exper}^2+\beta_4 f
++\theta_LD_L+\theta_MD_M+\theta_HD_H+u.
+\]
+各 $\theta_j$ 分别给出相应抽烟组相对不抽烟组的条件对数工资差异。
+
+\subq{iv}“抽烟对工资没有影响”的原假设为
+\[
+H_0:\theta_L=\theta_M=\theta_H=0.
+\]
+非受限式有 $7$ 个解释变量和 $1$ 个截距；受限式删除三个抽烟虚拟变量。若两式使用同一批 $n$ 个观测，
+\[
+F=\frac{(SSR_R-SSR_{UR})/3}{SSR_{UR}/(n-8)}
+ =\frac{(R_{UR}^2-R_R^2)/3}{(1-R_{UR}^2)/(n-8)}.
+\]
+在通常同方差假定下，原假设成立时参照 $F_{3,n-8}$ 分布；大于相应上侧临界值则拒绝原假设。
+
+\subq{v}这类调查数据适合估计控制已观测特征后的相关关系。要解释为因果效应，还需满足 $E(u\mid\text{解释变量})=0$。能力、健康状况、风险偏好等可能同时影响抽烟与工资；工资也可能反过来影响抽烟，因此仅靠上述 OLS 设定不能保证因果解释。
+
+\question{9}{虚拟变量与连续变量的交互作用}
+\begin{originalquestion}
+令 $d$ 表示一个（二值）虚拟变量，并令 $z$ 表示一个定量变量。考虑模型
+\[
+y=\beta_0+\delta_0d+\beta_1z+\delta_1d\cdot z+u
+\]
+这是含有一个虚拟变量和一个定量变量的交互作用的一般模型［方程（7.17）中的一个例子］。
+
+\subq{i}由于没有太大变化，所以假设为 $u=0$。于是，当 $d=0$ 时，我们可以把 $y$ 和 $z$ 之间的关系写成函数 $f_0(z)=\beta_0+\beta_1z$。当 $d=1$ 时，同样写出 $y$ 和 $z$ 之间的关系，其中左边应该使用 $f_1(z)$，以表示 $z$ 的线函数。
+
+\subq{ii}假定 $\delta_1\ne0$（这意味着两条直线不平行），证明满足 $f_0(z^*)=f_1(z^*)$ 的 $z^*$ 值为 $z^*=-\delta_0/\delta_1$。这是两条直线的交点［如图7.2（b）所示］。证明：$z^*$ 为正的充分必要条件是 $\delta_0$ 和 $\delta_1$ 都为正。
+
+\subq{iii}利用TWOYEAR中的数据，估计出下方程：
+\[
+\widehat{\log(\vr{wage})}
+=\coef{2.289}{0.011}-\coef{0.357}{0.015}\vr{female}
++\coef{0.50}{0.003}\vr{totcoll}
++\coef{0.030}{0.005}\vr{female}\cdot\vr{totcoll}
+\]
+\[
+n=6763,\qquad R^2=0.202
+\]
+其中所有系数和标准误都保留到小数点后三位。利用这个方程，求出使得男女 $\log(\vr{wage})$ 的预测值相等的 $\vr{totcoll}$ 值。
+
+\subq{iv}基于第（iii）部分的方程，女性能现实地获得足够多的大学教育而比男性的工资更高吗？请解释。
+\end{originalquestion}
+
+模型为
+\[
+y=\beta_0+\delta_0d+\beta_1z+\delta_1dz+u,\qquad d\in\{0,1\}.
+\]
+\subq{i}按题意令 $u=0$。当 $d=0$ 时，
+\[
+f_0(z)=\beta_0+\beta_1z.
+\]
+当 $d=1$ 时，
+\[
+f_1(z)=(\beta_0+\delta_0)+(\beta_1+\delta_1)z.
+\]
+$\delta_0$ 是 $z=0$ 处的两组截距差，$\delta_1$ 是两组斜率差。
+
+\subq{ii}由 $f_0(z^*)=f_1(z^*)$，
+\[
+\beta_0+\beta_1z^*
+=\beta_0+\delta_0+(\beta_1+\delta_1)z^*
+\quad\Longrightarrow\quad
+\delta_0+\delta_1z^*=0.
+\]
+在 $\delta_1\ne0$ 时，唯一交点为
+\[
+\boxed{z^*=-\frac{\delta_0}{\delta_1}}.
+\]
+因此
+\[
+z^*>0
+\iff \frac{\delta_0}{\delta_1}<0
+\iff \delta_0\delta_1<0,
+\]
+即 $\delta_0$ 与 $\delta_1$ 异号。这一条件是充要条件。题干的“都为正”应为“异号”；两者都为正时，$z^*<0$。
+
+\subq{iii}原图中 $\vr{totcoll}$ 的主项系数 $0.50$ 有小数位误印：用 TWOYEAR 数据按该式重估得 $0.04966$，保留三位小数应为 $0.050$。该主项在男女差分中抵消，不影响本问结果。女性相对男性的预测对数工资差异为
+\[
+\widehat\Delta(\vr{totcoll})
+=-0.357+0.030\vr{totcoll}.
+\]
+令其等于零，
+\[
+\vr{totcoll}^{*}=\frac{0.357}{0.030}
+=\boxed{11.9\text{ 年}}.
+\]
+这是按所报系数计算的两条预测直线的交点。
+
+\subq{iv}女性预测工资超过男性，需要
+\[
+-0.357+0.030\vr{totcoll}>0
+\quad\Longleftrightarrow\quad
+\vr{totcoll}>11.9.
+\]
+因此，该模型要求超过 $11.9$ 年的大学教育。题中 $\vr{totcoll}$ 是大学教育年数，这一交点超出通常的取值范围；对通常的大学教育年限，估计式并不预测女性工资超过男性。
+
+\question{10}{随机分配教育券}
+\begin{originalquestion}
+对于每个居住在特定学校地区的孩子，定义 $\vr{voucher}_i$ 为虚拟变量，当孩子被选入参与学校教育券项目时取 $1$，令 $\vr{score}_i$ 等于孩子在随后的标准化考试中得到的分数。假定参与变量 $\vr{voucher}_i$ 在条件定义下完全随机，独立于可以影响考试分数的可观测和不可观测的因素。
+
+\subq{i}如果你使用大小为 $n$ 的随机样本以 $\vr{score}_i$ 为因变量、$\vr{voucher}_i$ 为自变量进行回归，OLS 估计量会提供教育券项目影响的无偏估计吗？
+
+\subq{ii}假定你可以收集额外的背景信息，比如家庭收入、家庭结构（例如，孩子是否和父母共同居住）和父母的教育水平。你是否需要控制这些因素以获得教育券项目影响的无偏估计？试解释。
+
+\subq{iii}为什么你应该将关于家庭背景的变量纳入回归中？是否有某种情况是你不会将背景变量纳入的？
+\end{originalquestion}
+
+\subq{i}令 $D_i=\vr{voucher}_i$，$Y_i(0),Y_i(1)$ 为两种状态下的潜在成绩。完全随机分配意味着
+\[
+D_i\perp\!\!\!\perp\bigl(Y_i(0),Y_i(1)\bigr).
+\]
+在含截距的一元回归 $\vr{score}_i=\beta_0+\beta_1D_i+u_i$ 中，
+\[
+\widehat\beta_1=\bar Y_1-\bar Y_0.
+\]
+而随机分配给出
+\[
+\E(Y\mid D=1)-\E(Y\mid D=0)
+=\E[Y(1)]-\E[Y(0)].
+\]
+所以两组都存在时，该 OLS 系数无偏估计教育券的平均处理效应。
+
+\subq{ii}不需要依靠控制家庭收入、家庭结构和母亲教育来消除混杂。随机分配已使教育券与这些处理前特征独立，遗漏它们不会使教育券系数产生系统性偏误。
+
+\subq{iii}若这些背景变量能解释成绩，纳入它们通常可降低残差方差，提高估计精度。如果它们与成绩几乎无关，则增加这些变量主要消耗自由度，尤其在小样本中未必有利。
+
+\question{11}{性别差异、联合检验与交互项中心化}
+\begin{originalquestion}
+下面的等式是使用 ECONMATH 中的数据估计的，标准误在系数下面的括号中给出。班级平均分数用百分比度量，约 $72.2$；班级 $50\%$ 的学生恰好为男性；$\vr{colgpa}$（个人学期初的平均绩点）大约为 $2.81$。
+\[
+\widehat{\vr{score}}=\coef{32.31}{2.00}+\coef{14.32}{0.70}\vr{colgpa},
+\qquad n=856,\quad R^2=0.329,\quad\bar R^2=0.328.
+\]
+\[
+\widehat{\vr{score}}=\coef{29.66}{2.04}+\coef{3.83}{0.74}\vr{male}
++\coef{14.57}{0.69}\vr{colgpa},
+\]
+\[
+n=856,\qquad R^2=0.349,\qquad\bar R^2=0.348.
+\]
+\[
+\begin{aligned}
+\widehat{\vr{score}}={}&\coef{30.36}{2.86}+\coef{2.47}{3.96}\vr{male}
++\coef{14.33}{0.98}\vr{colgpa}\\
+&+\coef{0.479}{1.383}\vr{male}\cdot\vr{colgpa},
+\end{aligned}
+\]
+\[
+n=856,\qquad R^2=0.349,\qquad\bar R^2=0.347.
+\]
+\[
+\begin{aligned}
+\widehat{\vr{score}}={}&\coef{30.36}{2.86}+\coef{3.82}{0.74}\vr{male}
++\coef{14.33}{0.98}\vr{colgpa}\\
+&+\coef{0.479}{1.383}\vr{male}\cdot(\vr{colgpa}-2.81),
+\end{aligned}
+\]
+\[
+n=856,\qquad R^2=0.349,\qquad\bar R^2=0.347.
+\]
+
+\subq{i}解释第二个等式中 $\vr{male}$ 的系数的意义，构建一个 $\beta_{\vr{male}}$ 置信水平为 $95\%$ 的置信区间。置信区间不包括 $0$ 吗？
+
+\subq{ii}在第三个等式中，为什么 $\vr{male}$ 的估计会不显著？我们是否应该得出结论：控制了 $\vr{colgpa}$ 之后，$\vr{score}$ 没有性别差异？［提示：你可能想要计算一个 $F$ 统计量，零假设是：在交叉项模型中没有性别差异。］
+
+\subq{iii}相比于第三个等式，为什么最后一个等式中 $\vr{male}$ 的系数如此接近第二个等式中直接估计的数值呢？
+\end{originalquestion}
+
+\noindent\textbf{题干数值核对：}原图均分 $72.2$ 与对应 ECONMATH 样本不符；该样本均分为 $72.5998$，约 $72.6$。这一背景数值不参与以下计算。
+
+\subq{i}第二个方程为
+\[
+\widehat{\vr{score}}=29.66+3.83\vr{male}+14.57\vr{colgpa}.
+\]
+因此，控制平均绩点后，男性的预测成绩比女性高 $3.83$ 个百分点。残差自由度为 $856-3=853$，$95\%$ 置信区间为
+\[
+3.83\pm t_{0.975,853}(0.74)
+\approx 3.83\pm1.963(0.74)
+=\boxed{[2.38,\ 5.28]}.
+\]
+区间不包含零。
+
+\subq{ii}第三个方程中的条件性别差异为
+\[
+\widehat\Delta(c)=2.47+0.479c,\qquad c=\vr{colgpa}.
+\]
+此时 $\vr{male}$ 的单独系数检验的是 $c=0$ 处的差异，其
+\[
+t=\frac{2.47}{3.96}\approx0.624
+\]
+不显著。零绩点远离样本平均绩点 $2.81$，该点的差异估计不够精确；这不能推出整个回归函数没有性别差异。
+
+要检验控制绩点后是否完全没有性别差异，必须联合检验
+\[
+H_0:\beta_{\vr{male}}=\beta_{\vr{male}\cdot\vr{colgpa}}=0.
+\]
+受限模型是第一个方程，非受限模型是第三个方程，所以
+\[
+F=\frac{(0.349-0.329)/2}{(1-0.349)/(856-4)}
+\approx\boxed{13.09},\qquad df=(2,852).
+\]
+该值超过 $1\%$ 的上侧临界值，故拒绝原假设：控制绩点后，存在统计显著的性别差异。该 $F$ 值由舍入后的 $R^2$ 算得。
+
+\subq{iii}利用恒等式
+\[
+\vr{male}\cdot\vr{colgpa}
+=\vr{male}(\vr{colgpa}-2.81)+2.81\vr{male},
+\]
+中心化后的男性系数变为
+\[
+2.47+0.479(2.81)=3.81599\approx3.82.
+\]
+它衡量 $\vr{colgpa}=2.81$ 时的性别差异。第二个方程估计的是施加共同斜率后的性别差异 $3.83$；第三式的斜率差较小，且共同斜率模型主要由样本集中的绩点区间决定，所以它与样本平均绩点处的差异十分接近。两个估计量不要求严格相等。
+
+\question{12}{种族变量与城市构成的交互项}
+\begin{originalquestion}
+考虑例 $7.11$，其中在计算一个运动员的种族和一座城市的种族构成的交互项前，我们将城市组成的变量集中在样本平均值 $\overline{\vr{percblck}}$ 和 $\overline{\vr{perchisp}}$（分别约为 $16.55$ 和 $10.82$）上。得到的估计方程为：
+\[
+\begin{aligned}
+\widehat{\log(\vr{salary})}={}&\coef{10.23}{2.18}+\coef{0.0673}{0.0129}\vr{years}
++\coef{0.0089}{0.0034}\vr{gamesyr}\\
+&+\coef{0.00095}{0.00151}\vr{bavg}
++\coef{0.0146}{0.0164}\vr{hrunsyr}\\
+&+\coef{0.0045}{0.0076}\vr{rbisyr}
++\coef{0.0072}{0.0046}\vr{runsyr}\\
+&+\coef{0.0011}{0.0021}\vr{fldperc}
++\coef{0.0075}{0.0029}\vr{allstar}\\
+&+\coef{0.0080}{0.0840}\vr{black}
++\coef{0.0273}{0.1084}\vr{hispan}\\
+&+\coef{0.0125}{0.0050}\vr{black}\cdot
+(\vr{percblck}-\overline{\vr{percblck}})\\
+&+\coef{0.0201}{0.0098}\vr{hispan}\cdot
+(\vr{perchisp}-\overline{\vr{perchisp}}),
+\end{aligned}
+\]
+\[
+n=330,\qquad R^2=0.638.
+\]
+
+\subq{i}为什么现在 $\vr{black}$ 和 $\vr{hispan}$ 的系数与在方程（7.19）中报告的大不相同？特别地，你如何解读这些系数？
+
+\subq{ii}你怎么看待上述方程中 $\vr{black}$ 和 $\vr{hispan}$ 都在统计意义上不显著？
+
+\subq{iii}比较上述方程与（7.19），还有其他东西发生变化了吗？为什么？
+\end{originalquestion}
+
+题给方程中的种族部分为
+\[
+\begin{aligned}
+&0.0080\vr{black}+0.0273\vr{hispan}\\
+&\quad+0.0125\vr{black}(\vr{percblck}-16.55)
++0.0201\vr{hispan}(\vr{perchisp}-10.82).
+\end{aligned}
+\]
+\subq{i}中心化改变了种族主效应的参照点。以黑人变量为例，未中心化的种族部分可写为
+\[
+\begin{aligned}
+\delta_b\vr{black}+\gamma_b\vr{black}\cdot\vr{percblck}
+={}&(\delta_b+16.55\gamma_b)\vr{black}\\
+&+\gamma_b\vr{black}(\vr{percblck}-16.55).
+\end{aligned}
+\]
+因此，新主效应为 $\delta_b+16.55\gamma_b$；西班牙裔对应的新主效应为 $\delta_h+10.82\gamma_h$。按题中舍入值倒推，原主效应约为
+\[
+\delta_b=0.0080-16.55(0.0125)=-0.198875,
+\]
+\[
+\delta_h=0.0273-10.82(0.0201)=-0.190182.
+\]
+这解释了它们与原式（7.19）的差别：原式在相关种族人口占比为零处比较工资，新式在样本平均占比处比较工资。
+
+控制其他因素后，当城市黑人人口占比为 $16.55\%$ 时，黑人球员的预测工资比白人球员约高 $0.80\%$；当西班牙裔人口占比为 $10.82\%$ 时，西班牙裔球员的预测工资比白人球员约高 $2.73\%$。
+
+\subq{ii}两个主效应的 $t$ 值为
+\[
+t_b=\frac{0.0080}{0.0840}\approx0.095,\qquad
+t_h=\frac{0.0273}{0.1084}\approx0.252.
+\]
+因此，在样本平均城市种族构成处，未发现显著的种族工资差异。这一结论针对该参照点，因为一般城市中的差异为
+\[
+\Delta_b(z)=0.0080+0.0125(z-16.55),\qquad z=\vr{percblck},
+\]
+\[
+\Delta_h(w)=0.0273+0.0201(w-10.82),\qquad w=\vr{perchisp}.
+\]
+两个交互项的 $t$ 值分别为 $2.50$ 和约 $2.05$，所以不能将主效应不显著理解为所有城市都不存在种族工资差异。
+
+\subq{iii}这是同一模型的可逆重参数化。除 $\vr{black}$、$\vr{hispan}$ 主效应的系数、标准误及相应单系数检验改变外，其余系数及其标准误、拟合值、残差、$SSR$、$R^2$、调整后 $R^2$ 和样本量均不变。整体上检验“两个种族主效应与两个交互项均为零”的结论也不变。
+
+\question{13}{样本平均处理效应与观测组均值}
+\begin{originalquestion}
+\subq{i}在用一个为 $n$ 的样本的潜在结果的记号下，用 $[y_i(0),y_i(1)]$ 表示单位 $i$ 的一对潜在结果。定义平均值
+\[
+\overline{y(0)}=n^{-1}\sum_{i=1}^n y_i(0)
+\]
+和
+\[
+\overline{y(1)}=n^{-1}\sum_{i=1}^n y_i(1)
+\]
+并定义样本平均处理效应（SATE）为 $SATE=\overline{y(1)}-\overline{y(0)}$。你能计算给定典型项目评价数据集时的 SATE 吗？
+
+\subq{ii}令 $\bar y_0$ 和 $\bar y_1$ 分别作为对照组和处理组的观测值 $y_i$ 的平均值。表明这些与 $\overline{y(0)}$ 和 $\overline{y(1)}$ 有什么不同。
+\end{originalquestion}
+
+令 $D_i=1$ 表示个体 $i$ 接受处理，$D_i=0$ 表示未接受处理。定义
+\[
+\overline{Y(0)}=\frac1n\sum_{i=1}^nY_i(0),\qquad
+\overline{Y(1)}=\frac1n\sum_{i=1}^nY_i(1).
+\]
+\subq{i}样本平均处理效应为
+\[
+SATE=\overline{Y(1)}-\overline{Y(0)}
+=\frac1n\sum_{i=1}^n\bigl[Y_i(1)-Y_i(0)\bigr].
+\]
+典型项目评价数据不能直接给出 $SATE$ 的准确数值，因为每个人只能观察到一种状态下的结果：
+\[
+Y_i=D_iY_i(1)+(1-D_i)Y_i(0).
+\]
+接受处理者的 $Y_i(0)$ 和未接受处理者的 $Y_i(1)$ 都是未观测反事实，所以无法直接算出所有人的个体效应并取平均。
+
+\subq{ii}记 $n_1=\sum_iD_i$、$n_0=n-n_1$，则实际可观测的组均值为
+\[
+\bar Y_0=\frac1{n_0}\sum_{D_i=0}Y_i
+=\frac1{n_0}\sum_{D_i=0}Y_i(0),
+\]
+\[
+\bar Y_1=\frac1{n_1}\sum_{D_i=1}Y_i
+=\frac1{n_1}\sum_{D_i=1}Y_i(1).
+\]
+两组量的区别是：$\bar Y_0,\bar Y_1$ 分别对实际对照组和实际处理组取平均；$\overline{Y(0)},\overline{Y(1)}$ 则对同一个全体样本在两种状态下的潜在结果取平均。后两者包含未观测反事实，一般不等于对应的可观测组均值。
+
+在完全随机分配且两组样本量固定为正时，对分配机制取期望，
+\[
+\E_D(\bar Y_0)=\overline{Y(0)},\qquad
+\E_D(\bar Y_1)=\overline{Y(1)}.
+\]
+因此
+\[
+\E_D(\bar Y_1-\bar Y_0)=SATE.
+\]
+这说明均值差可以无偏估计 $SATE$，但不意味着每次分配下的均值差都恰好等于 $SATE$。
+\end{document}

@@ -1,0 +1,10 @@
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+*.xdv
+.DS_Store
+Thumbs.db
